@@ -5,21 +5,20 @@ import akka.actor.typed.ActorRef;
 import com.example.shoppingcart.actor.ShoppingCart;
 import com.example.shoppingcart.actor.ShoppingCartManager;
 import com.example.shoppingcart.model.*;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExternalResource;
 
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import org.junit.Test;
+
+
 
 import org.junit.ClassRule;
-
 import static org.junit.Assert.*;
+
+import com.typesafe.config.ConfigFactory;
 
 public class ShoppingCartTest {
 
     @ClassRule
-    public static final TestKitJunitResource testKit = new TestKitJunitResource();
+    public static final TestKitJunitResource testKit = new TestKitJunitResource(ConfigFactory.load("test-akka.conf"));
 
     @Test
     public void testAddItemToCart() {
@@ -84,19 +83,18 @@ public class ShoppingCartTest {
         
         // Add an item to a cart
         CartItem item = new CartItem("p1", "Test Product", 19.99, 1);
-        var ignoreProbe = testKit.createTestProbe(Object.class);
 
         manager.tell(new ShoppingCartManager.ForwardToCart(
             "test-cart-3",
             new AddItem("test-cart-3", item, confirmationProbe.getRef()),
-            ignoreProbe.getRef()
+            null
         ));
         
         // Get the cart
         manager.tell(new ShoppingCartManager.ForwardToCart(
             "test-cart-3",
             new GetCart("test-cart-3", cartStateProbe.getRef()),
-            ignoreProbe.getRef()
+            null
         ));
         
         // Verify the cart state
