@@ -76,7 +76,7 @@ This diagram illustrates a simplified data flow, assuming an external client int
 graph LR
     A[Client Request] --> B(API Layer)
     B --> C{ShoppingCartManager Actor}
-    C -- "Create/Find CartId" --> D[ShoppingCart Actor (for CartId)]
+    C -- "Create/Find CartId" --> D["ShoppingCart Actor (for CartId)"]
     D -- "Update Cart State" --> E[Cart State Data]
     D -- "Respond to Manager" --> C
     C -- "Respond to API Layer" --> B
