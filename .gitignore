@@ -1,0 +1,32 @@
+# Maven
+target/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+log/
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Temporary files
+*~
+
+# Akka Persistence
+data/ 

@@ -43,10 +43,7 @@ public class ShoppingCart extends EventSourcedBehavior<ShoppingCartCommand, Shop
 
     @Override
     public EventHandler<PersistentCartState, ShoppingCartEvent> eventHandler() {
-        return newEventHandlerBuilder()
-            .forAnyState()
-            .onAnyEvent((state, event) -> state.applyEvent(event))
-            .build();
+        return (state, event) -> state.applyEvent(event);
     }
 
     private Effect<ShoppingCartEvent, PersistentCartState> onAddItem(PersistentCartState state, AddItem cmd) {
@@ -85,15 +82,5 @@ public class ShoppingCart extends EventSourcedBehavior<ShoppingCartCommand, Shop
     private Effect<ShoppingCartEvent, PersistentCartState> onGetCart(PersistentCartState state, GetCart cmd) {
         cmd.replyTo.tell(state.toCartState());
         return Effect().none();
-    }
-    
-    @Override
-    public SignalHandler signalHandler() {
-        return newSignalHandlerBuilder()
-            .onAnySignal((state, signal) -> {
-                context.getLog().debug("Received signal: {} in state: {}", signal, state);
-                return Effect().none();
-            })
-            .build();
     }
 }

@@ -5,11 +5,14 @@ import akka.actor.typed.ActorRef;
 import com.example.shoppingcart.actor.ShoppingCart;
 import com.example.shoppingcart.actor.ShoppingCartManager;
 import com.example.shoppingcart.model.*;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExternalResource;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.junit.ClassRule;
 
 import static org.junit.Assert.*;
 
@@ -73,30 +76,31 @@ public class ShoppingCartTest {
     @Test
     public void testGetCart() {
         // Create test probes
-        var probe = testKit.createTestProbe(Object.class);
+        var confirmationProbe = testKit.createTestProbe(Confirmation.class);
+        var cartStateProbe = testKit.createTestProbe(CartState.class);
         
         // Create a shopping cart manager
         var manager = testKit.spawn(ShoppingCartManager.create());
         
         // Add an item to a cart
         CartItem item = new CartItem("p1", "Test Product", 19.99, 1);
+        var ignoreProbe = testKit.createTestProbe(Object.class);
+
         manager.tell(new ShoppingCartManager.ForwardToCart(
             "test-cart-3",
-            new AddItem("test-cart-3", item, (ActorRef<Confirmation>) probe.getRef()),
-            probe.getRef()
+            new AddItem("test-cart-3", item, confirmationProbe.getRef()),
+            ignoreProbe.getRef()
         ));
         
         // Get the cart
         manager.tell(new ShoppingCartManager.ForwardToCart(
             "test-cart-3",
-            new GetCart("test-cart-3", (ActorRef<CartState>) probe.getRef()),
-            probe.getRef()
+            new GetCart("test-cart-3", cartStateProbe.getRef()),
+            ignoreProbe.getRef()
         ));
         
         // Verify the cart state
-        Object response = probe.receiveMessage();
-        assertTrue(response instanceof CartState);
-        CartState state = (CartState) response;
+        CartState state = cartStateProbe.receiveMessage();
         assertEquals(1, state.items.size());
         assertTrue(state.items.containsKey("p1"));
     }

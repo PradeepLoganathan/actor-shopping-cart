@@ -3,7 +3,7 @@ package com.example.shoppingcart.model;
 import java.io.Serializable;
 import java.util.Map;
 
-// Response wrapper for the cart state
+// Canonical CartState class. Any other definitions have been removed.
 public final class CartState implements Serializable {
     private static final long serialVersionUID = 1L;
     

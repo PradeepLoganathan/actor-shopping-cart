@@ -8,6 +8,7 @@ import akka.actor.typed.receptionist.ServiceKey;
 import akka.cluster.sharding.typed.javadsl.ClusterSharding;
 import akka.cluster.sharding.typed.javadsl.Entity;
 import akka.cluster.sharding.typed.javadsl.EntityTypeKey;
+import akka.cluster.sharding.typed.javadsl.EntityRef;
 import com.example.shoppingcart.model.*;
 
 public class ShoppingCartManager extends AbstractBehavior<ShoppingCartManager.Command> {
@@ -83,7 +84,7 @@ public class ShoppingCartManager extends AbstractBehavior<ShoppingCartManager.Co
 
     private Behavior<Command> onForwardToCart(ForwardToCart cmd) {
         // Get or create the entity ref for the cart
-        ActorRef<ShoppingCartCommand> cartEntity = sharding.entityRefFor(
+        EntityRef<ShoppingCartCommand> cartEntity = sharding.entityRefFor(
             ENTITY_TYPE_KEY, 
             cmd.cartId
         );

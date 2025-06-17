@@ -56,48 +56,49 @@ public class ShoppingCartApp {
         CartItem book1 = new CartItem("book-1", "Akka in Action", 42.0, 1);
         CartItem book2 = new CartItem("book-2", "Programming in Scala", 39.99, 1);
         
-        // Create a reply adapter to handle responses
-        ActorRef<Object> replyTo = system.ignoreRef();
+        // Create reply adapters for each type
+        ActorRef<Confirmation> confirmationReplyTo = system.ignoreRef();
+        ActorRef<CartState> cartStateReplyTo = system.ignoreRef();
         
         // Chain operations using CompletableFuture
-        return addItemToCart(book1, replyTo)
-            .thenCompose(ignored -> addItemToCart(book2, replyTo))
-            .thenCompose(ignored -> getCartState(replyTo))
-            .thenCompose(ignored -> removeItemFromCart("book-1", 1, replyTo))
-            .thenCompose(ignored -> getCartState(replyTo))
+        return addItemToCart(book1, confirmationReplyTo)
+            .thenCompose(ignored -> addItemToCart(book2, confirmationReplyTo))
+            .thenCompose(ignored -> getCartState(cartStateReplyTo))
+            .thenCompose(ignored -> removeItemFromCart("book-1", 1, confirmationReplyTo))
+            .thenCompose(ignored -> getCartState(cartStateReplyTo))
             .exceptionally(throwable -> {
                 system.log().error("Error in shopping cart operations", throwable);
                 return null;
             });
     }
     
-    private CompletionStage<Void> addItemToCart(CartItem item, ActorRef<Object> replyTo) {
+    private CompletionStage<Void> addItemToCart(CartItem item, ActorRef<Confirmation> replyTo) {
         system.log().info("Adding item to cart: {}", item);
         return sendCommand(new ShoppingCartManager.ForwardToCart(
             cartId,
-            new AddItem(item, replyTo),
+            new AddItem(cartId, item, replyTo),
             system.ignoreRef()
         )).thenAccept(response -> 
             system.log().info("Add item response: {}", response)
         );
     }
     
-    private CompletionStage<Void> removeItemFromCart(String productId, int quantity, ActorRef<Object> replyTo) {
+    private CompletionStage<Void> removeItemFromCart(String productId, int quantity, ActorRef<Confirmation> replyTo) {
         system.log().info("Removing item from cart: {} (quantity: {})", productId, quantity);
         return sendCommand(new ShoppingCartManager.ForwardToCart(
             cartId,
-            new RemoveItem(productId, quantity, replyTo),
+            new RemoveItem(cartId, productId, quantity, replyTo),
             system.ignoreRef()
         )).thenAccept(response -> 
             system.log().info("Remove item response: {}", response)
         );
     }
     
-    private CompletionStage<Void> getCartState(ActorRef<Object> replyTo) {
+    private CompletionStage<Void> getCartState(ActorRef<CartState> replyTo) {
         system.log().info("Getting cart state...");
         return sendCommand(new ShoppingCartManager.ForwardToCart(
             cartId,
-            new GetCart(replyTo),
+            new GetCart(cartId, replyTo),
             system.ignoreRef()
         )).thenAccept(state -> 
             system.log().info("Current cart state: {}", state)
@@ -114,29 +115,5 @@ public class ShoppingCartApp {
     private void shutdown() {
         system.log().info("Shutting down...");
         system.terminate();
-    }
-}
-        for (CartItem item : items) {
-            addItem(userId, item)
-                .thenAccept(response -> {
-                    if (response instanceof Accepted) {
-                        System.out.println("Added to cart: " + item);
-                    } else if (response instanceof Rejected) {
-                        System.out.println("Failed to add item: " + ((Rejected) response).reason);
-                    }
-                });
-        }
-        
-        // Get cart contents
-        getCart(userId).thenAccept(cartState -> {
-            if (cartState instanceof CartState) {
-                CartState state = (CartState) cartState;
-                System.out.println("\nCart contents for " + userId + ":");
-                state.items.values().forEach(item -> 
-                    System.out.println("- " + item)
-                );
-                System.out.printf("Total: $%.2f%n", state.totalPrice);
-            }
-        });
     }
 }
