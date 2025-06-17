@@ -52,7 +52,7 @@ The core of the application revolves around two main actor types:
 
 -   **`ShoppingCart`**: An actor representing a single user's shopping cart. It maintains the state of the items within that cart and processes commands like adding, removing, or updating items.
 
-```
+```mermaid
 graph TD
     A[Akka Actor System] --> B(ShoppingCartManager)
     B --> C1(ShoppingCart-User1)
@@ -72,7 +72,7 @@ Data Flow Diagram
 
 This diagram illustrates a simplified data flow, assuming an external client interacts with the system, possibly via a higher-level API (e.g., Akka HTTP or gRPC), which then sends messages to the `ShoppingCartManager`.
 
-```
+```mermaid
 graph LR
     A[Client Request] --> B(API Layer)
     B --> C{ShoppingCartManager Actor}
@@ -106,7 +106,7 @@ mvn clean install
 
 You can create a main class to start the Akka Actor System and interact with it.
 
-```
+```java
 // Example Main class (not yet provided, but would go here)
 public class Main {
     public static void main(String[] args) {
