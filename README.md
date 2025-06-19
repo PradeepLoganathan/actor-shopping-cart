@@ -2,7 +2,8 @@ Akka-based Java Shopping Cart
 =============================
 
 This project demonstrates a scalable and resilient shopping cart system built with Akka Actors in Java. It leverages Akka's concurrency model to manage individual shopping cart states, ensuring high availability and responsiveness.
-[Watch the video](https://raw.githubusercontent.com/PradeepLoganathan/actor-shopping-cart/main/pradeep-actor-model.mp4)
+
+[Watch the Actor Model Video](https://youtu.be/uH4NGyl3iRY)
 
 ## Features
 
