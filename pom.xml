@@ -15,12 +15,17 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <akka.version>2.8.0</akka.version>
         <scala.binary.version>2.13</scala.binary.version>
         <akka-http.version>10.5.0</akka-http.version>
-        <argLine>--add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED</argLine>
+        <argLine>
+            --add-opens=java.base/java.nio=ALL-UNNAMED
+            --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+            --add-opens=java.base/java.io=ALL-UNNAMED
+            --add-exports=java.base/sun.nio.ch=ALL-UNNAMED
+        </argLine>
     </properties>
 
     <dependencies>
@@ -138,13 +143,20 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.example.shoppingcart.ShoppingCartApp</mainClass>
+                    <executable>java</executable>
                     <arguments>
-                        <argument>arg1</argument>
+                        <argument>--add-opens</argument>
+                        <argument>java.base/java.nio=ALL-UNNAMED</argument>
+                        <argument>--add-opens</argument>
+                        <argument>java.base/sun.nio.ch=ALL-UNNAMED</argument>
+                        <argument>--add-opens</argument>
+                        <argument>java.base/java.io=ALL-UNNAMED</argument>
+                        <argument>--add-exports</argument>
+                        <argument>java.base/sun.nio.ch=ALL-UNNAMED</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>com.example.shoppingcart.ShoppingCartApp</argument>
                     </arguments>
-                    <systemProperties>
-                        
-                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>

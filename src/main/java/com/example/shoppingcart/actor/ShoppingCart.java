@@ -6,8 +6,7 @@ import akka.persistence.typed.PersistenceId;
 import akka.persistence.typed.javadsl.*;
 import com.example.shoppingcart.model.*;
 
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class ShoppingCart extends EventSourcedBehavior<ShoppingCartCommand, ShoppingCartEvent, PersistentCartState> {
     private final String cartId;
