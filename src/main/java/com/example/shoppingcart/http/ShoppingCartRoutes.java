@@ -93,7 +93,7 @@ public class ShoppingCartRoutes {
     // Defines the DELETE /carts/{cartId}/items/{productId}?quantity=1 route
     private Route deleteRoute(String cartId) {
         return delete(() ->
-            path("items", () ->
+            pathPrefix("items", () ->
                 path(segment(), productId ->
                     parameter("quantity", quantity ->
                         handleConfirmation(removeItem(cartId, productId, Integer.parseInt(quantity)))

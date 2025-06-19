@@ -5,6 +5,7 @@ import akka.actor.typed.javadsl.*;
 import akka.persistence.typed.PersistenceId;
 import akka.persistence.typed.javadsl.*;
 import com.example.shoppingcart.model.*;
+import java.util.HashMap;
 
 
 
@@ -27,7 +28,7 @@ public class ShoppingCart extends EventSourcedBehavior<ShoppingCartCommand, Shop
 
     @Override
     public PersistentCartState emptyState() {
-        return PersistentCartState.EMPTY;
+        return new PersistentCartState(cartId, new HashMap<>());
     }
 
     @Override
