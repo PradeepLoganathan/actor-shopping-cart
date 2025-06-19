@@ -1,0 +1,50 @@
+
+@hostname = http://localhost:8080
+@cartId = my-awesome-cart
+
+###
+# Add a book to the shopping cart
+# @name addItem
+POST {{hostname}}/carts/{{cartId}}/items
+Content-Type: application/json
+
+{
+  "productId": "akka-book-01",
+  "name": "Akka in Action",
+  "price": 45.99,
+  "quantity": 1
+}
+
+###
+# Add a second, different item to the same cart
+# @name addAnotherItem
+POST {{hostname}}/carts/{{cartId}}/items
+Content-Type: application/json
+
+{
+    "productId": "scala-book-02",
+    "name": "Programming in Scala",
+    "price": 55.00,
+    "quantity": 2
+}
+
+
+###
+# Get the current state of the shopping cart
+# @name getCart
+GET {{hostname}}/carts/{{cartId}}
+Accept: application/json
+
+
+###
+# Remove one of the "Programming in Scala" books from the cart
+# @name removeItem
+DELETE {{hostname}}/carts/{{cartId}}/items/scala-book-02?quantity=1
+
+
+###
+# Get the cart state again to see the result of the removal
+# @name getCartAfterRemove
+GET {{hostname}}/carts/{{cartId}}
+Accept: application/json
+

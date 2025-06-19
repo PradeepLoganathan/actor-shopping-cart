@@ -2,13 +2,21 @@ package com.example.shoppingcart.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CartItem implements Serializable {
     private final String productId;
     private final String name;
     private final double price;
     private int quantity;
 
-    public CartItem(String productId, String name, double price, int quantity) {
+    @JsonCreator 
+    public CartItem(
+            @JsonProperty("productId") String productId,
+            @JsonProperty("name") String name,
+            @JsonProperty("price") double price,
+            @JsonProperty("quantity") int quantity) {
         this.productId = productId;
         this.name = name;
         this.price = price;
